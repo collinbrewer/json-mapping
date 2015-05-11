@@ -11,9 +11,15 @@ var JSONMapping;
 
       var inversed={};
 
-      for(var key in mapping)
+      for(var entityName in mapping)
       {
-         inversed[mapping[key]]=key;
+         var entityMapping=mapping[entityName];
+         var inversedEntityMapping=(inversed[entityName]={});
+
+         for(var key in entityMapping)
+         {
+            inversedEntityMapping[entityMapping[key]]=key;
+         }
       }
 
       return inversed;
