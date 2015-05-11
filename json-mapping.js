@@ -1,49 +1,149 @@
-var JSONMapping;
-
-(function(JSONMapping){
+(function(){
 
    /**
     * JSONMapping
     * A JSON object that defines the mapping of properties to another format
     */
+   var JSONMapping={};
 
-   JSONMapping.inverse=function(mapping){
+   /**
+    * inverseEntityMapping
+    * Creates a new mapping that reverses the given mapping
+    * Note: Will deprecate when dynamic mapper is complete
+    * @param {Object} mapping The mapping to be inversed
+    * @return {Object} The inversed mapping
+    */
+   JSONMapping.inverseEntityMapping=function(entityMapping){
 
       var inversed={};
 
-      for(var entityName in mapping)
+      for(var key in entityMapping)
       {
-         var entityMapping=mapping[entityName];
-         var inversedEntityMapping=(inversed[entityName]={});
-
-         for(var key in entityMapping)
-         {
-            inversedEntityMapping[entityMapping[key]]=key;
-         }
+         inversed[entityMapping[key]]=key;
       }
 
       return inversed;
    };
 
-   JSONMapping.to=function(mapping, object){
+   /**
+    * inverseSchemaMapping
+    * Creates a new schema mapping that reverses the given schema mapping
+    * Note: Will deprecate when dynamic mapper is complete
+    * @param {Object} mapping The mapping to be inversed
+    * @return {Object} The inversed mapping
+    */
+   JSONMapping.inverseSchemaMapping=function(mapping){
+
+      var inversed={};
+      var entityMapping;
+
+      for(var entityName in mapping)
+      {
+         entityMapping=mapping[entityName];
+
+         inversed[entityName]=JSONMapping.inverseEntityMapping(entityMapping);
+      }
+
+      return inversed;
+   };
+
+   /**
+   * toEntityMapping
+   * Creates a new object after applying the given mapping to the given object
+   * Note: Will deprecate when dynamic mapper is complete
+   * @param {Object} mapping The mapping to be applied
+   * @param {Object} object The object to be remapped
+   * @return {Object} The object in the destination form of the given mapping
+   */
+   JSONMapping.toEntityMapping=function(entityMapping, object){
 
       var mapped={};
 
       for(var key in object)
       {
-         mapped[mapping[key]]=object[key];
+         mapped[entityMapping[key]]=object[key];
       }
 
       return mapped;
    };
 
-   JSONMapping.from=function(mapping, object){
+   /**
+   * toSchemaMapping
+   * Creates a new object after applying the given mapping to the given object
+   * Note: Will deprecate when dynamic mapper is complete
+   * @param {Object} mapping The mapping to be applied
+   * @param {Object} object The object to be remapped
+   * @return {Object} The object in the destination form of the given mapping
+   */
+   // JSONMapping.toSchemaMapping=function(mapping, object){
+   //
+   //    var mapped={};
+   //    var entityMapping;
+   //    var mappedObject={};
+   //
+   //    for(var entityName in mapping)
+   //    {
+   //       entityMapping=mapping[entityName];
+   //       mappedObject=(mapped[entityName]={});
+   //
+   //       for(var key in object)
+   //       {
+   //          mappedObject[entityMapping[key]]=object[key];
+   //       }
+   //    }
+   //
+   //    return mapped;
+   // };
 
-      var inversed=JSONMapping.inverse(mapping);
+   /**
+   * fromEntityMapping
+   * Creates a new object after unapplying the given mapping to the given object
+   * Note: Will deprecate when dynamic mapper is complete
+   * @param {Object} mapping The mapping to be unapplied
+   * @param {Object} object The object to be remapped
+   * @return {Object} The object in the source form of the given mapping
+   */
+   JSONMapping.fromEntityMapping=function(entityMapping, object){
 
-      return JSONMapping.to(inversed, object);
+      var inversed=JSONMapping.inverseEntityMapping(entityMapping);
+
+      return JSONMapping.toEntityMapping(inversed, object);
    };
 
-})(JSONMapping || (JSONMapping = {}));
 
-(typeof(module)!=="undefined" ? (module.exports=JSONMapping) : (window.JSONMapping=JSONMapping));
+   /**
+   * fromSchemaMapping
+   * Creates a new object after unapplying the given mapping to the given object
+   * Note: Will deprecate when dynamic mapper is complete
+   * @param {Object} mapping The mapping to be unapplied
+   * @param {Object} object The object to be remapped
+   * @return {Object} The object in the source form of the given mapping
+   */
+   // JSONMapping.fromSchemaMapping=function(mapping, object){
+   //
+   //    var inversed=JSONMapping.inverseSchemaMapping(mapping);
+   //
+   //    return JSONMapping.toSchemaMapping(inversed, object);
+   // };
+
+   /**
+    * _dynamicMapper (internal)
+    * The new engine behind the mapper that handles mappings dynamically based
+    * on inferred schema.
+    */
+
+   var _dynamicMapper=function(mapping, source, destination){
+
+      destination={}; // This could be an array too
+
+      for(var key in source)
+      {
+         var child=_dynamicMapper(mapping[key], source[key], destination[mapping[key]]);
+
+      }
+   };
+
+   // export
+   (typeof(module)!=="undefined" ? (module.exports=JSONMapping) : ((typeof(define)!=="undefined" && define.amd) ? define(function(){ return JSONMapping; }) : (window.JSONMapping=JSONMapping)))
+
+})();
