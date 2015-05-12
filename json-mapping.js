@@ -16,10 +16,16 @@
    JSONMapping.inverseEntityMapping=function(entityMapping){
 
       var inversed={};
+      var propertyKey;
 
       for(var key in entityMapping)
       {
-         inversed[entityMapping[key]]=key;
+         propertyKey=entityMapping[key];
+
+         if(propertyKey!==undefined && propertyKey!==null && propertyKey!=="")
+         {
+            inversed[propertyKey]=key;
+         }
       }
 
       return inversed;
@@ -62,9 +68,19 @@
 
       for(var key in object)
       {
-         mappedKey=entityMapping[key];
+         if(key in entityMapping)
+         {
+            mappedKey=entityMapping[key];
 
-         mappedObject[(mappedKey===undefined ? key : mappedKey)]=object[key];
+            if(mappedKey!==undefined && mappedKey!==null && mappedKey!=="")
+            {
+               mappedObject[mappedKey]=object[key];
+            }
+         }
+         else
+         {
+            mappedObject[key]=object[key];
+         }
       }
 
       return mappedObject;

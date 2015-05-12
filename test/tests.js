@@ -47,20 +47,25 @@ require(["../json-mapping.js"], function(JSONMapping){
    describe("#inverseEntityMapping", function(){
 
       var mapping={
-         "oldkey": "newkey"
+         "oldkey": "newkey",
+         "keytoremove" : null
       };
 
       var inversed=JSONMapping.inverseEntityMapping(mapping);
 
+      console.log("inversed: ", inversed);
+
       mochi("new key", "newkey", "in", inversed);
       mochi("value at 'newkey'", inversed.newkey, "===", "oldkey");
+      mochi("ignored key exists", ("null" in inversed), "===", false);
    });
 
    describe("#inverseSchemaMapping", function(){
 
       var mapping={
          "entity":{
-            "oldkey": "newkey"
+            "oldkey": "newkey",
+            "keytoremove": null
          }
       };
 
@@ -68,24 +73,31 @@ require(["../json-mapping.js"], function(JSONMapping){
 
       mochi("new key", "newkey", "in", inversed.entity);
       mochi("value at 'entity.newkey'", inversed.entity.newkey, "===", "oldkey");
+      mochi("ignored key exists", ("null" in inversed.entity), "===", false);
    });
 
    describe("#toEntityMapping", function(){
 
       var unmapped={
          "oldkey": "value",
-         "unmapped": "value2"
+         "unmapped": "value2",
+         "keytoremove": "value3"
       };
 
       var mapping={
-         "oldkey": "newkey"
+         "oldkey": "newkey",
+         "keytoremove": null
       };
 
       var mapped=JSONMapping.toEntityMapping(mapping, unmapped);
 
+      console.log("mapped: ", mapped);
+
       mochi("mapped key exists", "newkey", "in", mapped);
       mochi("value at 'newkey'", mapped.newkey, "===", "value");
       mochi("unmapped key exists", "unmapped", "in", mapped);
+      mochi("ignored key exists", ("keytoremove" in mapped), "===", false);
+      mochi("null key exists", ("null" in mapped), "===", false);
    });
 
    // describe("#toSchemaMapping", function(){
@@ -115,7 +127,8 @@ require(["../json-mapping.js"], function(JSONMapping){
 
       var mapped={
          "newkey": "value",
-         "unmapped": "value2"
+         "unmapped": "value2",
+         "keytoremove": null
       };
 
       var mapping={
