@@ -52,8 +52,8 @@ require(["../json-mapping.js"], function(JSONMapping){
 
       var inversed=JSONMapping.inverseEntityMapping(mapping);
 
-      mochi("original key doesn't exist", ("oldkey" in inversed), "===", false);
-      mochi("new key exists", ("newkey" in inversed), "===", true);
+      mochi("new key", "newkey", "in", inversed);
+      mochi("value at 'newkey'", inversed.newkey, "===", "oldkey");
    });
 
    describe("#inverseSchemaMapping", function(){
@@ -66,14 +66,15 @@ require(["../json-mapping.js"], function(JSONMapping){
 
       var inversed=JSONMapping.inverseSchemaMapping(mapping);
 
-      mochi("original key doesn't exist", ("oldkey" in inversed.entity), "===", false);
-      mochi("new key exists", ("newkey" in inversed.entity), "===", true);
+      mochi("new key", "newkey", "in", inversed.entity);
+      mochi("value at 'entity.newkey'", inversed.entity.newkey, "===", "oldkey");
    });
 
    describe("#toEntityMapping", function(){
 
       var unmapped={
-         "oldkey": "value"
+         "oldkey": "value",
+         "unmapped": "value2"
       };
 
       var mapping={
@@ -82,11 +83,9 @@ require(["../json-mapping.js"], function(JSONMapping){
 
       var mapped=JSONMapping.toEntityMapping(mapping, unmapped);
 
-      console.log(JSON.stringify(mapped));
-
-      mochi("original key doesn't exist", ("oldkey" in mapped), "===", false);
-      mochi("new key exists", ("newkey" in mapped), "===", true);
-      mochi("value exists at new key", mapped.newkey, "===", "value");
+      mochi("mapped key exists", "newkey", "in", mapped);
+      mochi("value at 'newkey'", mapped.newkey, "===", "value");
+      mochi("unmapped key exists", "unmapped", "in", mapped);
    });
 
    // describe("#toSchemaMapping", function(){
@@ -115,7 +114,8 @@ require(["../json-mapping.js"], function(JSONMapping){
    describe("#fromEntityMapping", function(){
 
       var mapped={
-         "newkey": "value"
+         "newkey": "value",
+         "unmapped": "value2"
       };
 
       var mapping={
@@ -124,11 +124,9 @@ require(["../json-mapping.js"], function(JSONMapping){
 
       var unmapped=JSONMapping.fromEntityMapping(mapping, mapped);
 
-      console.log("unmapped: ", JSON.stringify(unmapped));
-
-      mochi("'oldkey' exists", ("oldkey" in unmapped), "===", true);
-      mochi("'newkey' does not exist", ("newkey" in unmapped), "===", false);
-      mochi("value exists at old key", unmapped.oldkey, "===", "value");
+      mochi("original key", "oldkey", "in", unmapped);
+      mochi("value at 'oldkey'", unmapped.oldkey, "===", "value");
+      mochi("unmapped key", "unmapped", "in", unmapped);
    });
 
    // global || window.mochaPhantomJS ? mochaPhantomJS.run() : mocha.run();
