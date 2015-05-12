@@ -144,7 +144,6 @@
    };
 
    // export
-   ((typeof(module)!=="undefined" ? (module.exports=JSONMapping) : ((typeof(define)!=="undefined" && define.amd) ? define(function(){ return JSONMapping; }) : false)));
+   (typeof(module)!=="undefined" ? (module.exports=JSONMapping) : ((typeof(define)!=="undefined" && define.amd) ? define(function(){ return JSONMapping; }) : (window.JSONMapping=JSONMapping)))
 
-   return (window.JSONMapping=JSONMapping);
 })();
