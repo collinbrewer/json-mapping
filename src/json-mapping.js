@@ -16,10 +16,16 @@
    JSONMapping.inverseEntityMapping=function(entityMapping){
 
       var inversed={};
+      var propertyKey;
 
       for(var key in entityMapping)
       {
-         inversed[entityMapping[key]]=key;
+         propertyKey=entityMapping[key];
+
+         if(propertyKey!==undefined && propertyKey!==null && propertyKey!=="")
+         {
+            inversed[propertyKey]=key;
+         }
       }
 
       return inversed;
@@ -57,14 +63,27 @@
    */
    JSONMapping.toEntityMapping=function(entityMapping, object){
 
-      var mapped={};
+      var mappedObject={};
+      var mappedKey;
 
       for(var key in object)
       {
-         mapped[entityMapping[key]]=object[key];
+         if(key in entityMapping)
+         {
+            mappedKey=entityMapping[key];
+
+            if(mappedKey!==undefined && mappedKey!==null && mappedKey!=="")
+            {
+               mappedObject[mappedKey]=object[key];
+            }
+         }
+         else
+         {
+            mappedObject[key]=object[key];
+         }
       }
 
-      return mapped;
+      return mappedObject;
    };
 
    /**
@@ -126,6 +145,21 @@
    //    return JSONMapping.toSchemaMapping(inversed, object);
    // };
 
+
+   /**
+    * _index
+    * Internal method for indexing a JSON Mapping into a static lookup table
+    * @param {Object} The original mapping
+    */
+   function _index(mapping){
+
+      var index={};
+
+      console.warn("Not Yet Implemented");
+
+      return index;
+   };
+
    /**
     * _dynamicMapper (internal)
     * The new engine behind the mapper that handles mappings dynamically based
@@ -139,11 +173,11 @@
       for(var key in source)
       {
          var child=_dynamicMapper(mapping[key], source[key], destination[mapping[key]]);
-
       }
    };
 
    // export
-   (typeof(module)!=="undefined" ? (module.exports=JSONMapping) : ((typeof(define)!=="undefined" && define.amd) ? define(function(){ return JSONMapping; }) : (window.JSONMapping=JSONMapping)))
+   ((typeof(module)!=="undefined" ? (module.exports=JSONMapping) : ((typeof(define)!=="undefined" && define.amd) ? define(function(){ return JSONMapping; }) : false)));
 
+   return JSONMapping;
 })();

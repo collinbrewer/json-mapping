@@ -4,7 +4,7 @@ JSON Mapping is a spec and utility for mapping values from one form to another.
 
 It's purpose is to allow flexibility in otherwise rigid systems in addition to offering a serializable structure for defining how data is converted.
 
-It's also pretty powerful.  A simple mapping can allow you to index an array by a key very simply:
+It's also pretty powerful.  For example, a simple mapping can allow you to index an array by a key very simply:
 
 ```javascript
 
