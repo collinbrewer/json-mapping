@@ -14,5 +14,9 @@
     "url": "https://collinbrewer@bitbucket.org/collinbrewer/json-mapping.git"
   },
   "author": "Collin Brewer <collin@brewer-collective.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3"
+  }
 }
