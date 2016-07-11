@@ -1,7 +1,7 @@
 {
   "name": "json-mapping",
   "version": "0.0.1",
-  "description": "JSON Mapping is a spec and utility for mapping values from one form to another.",
+  "description": "A utility for mapping values from one form to another.",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -14,7 +14,7 @@
     "url": "https://collinbrewer@bitbucket.org/collinbrewer/json-mapping.git"
   },
   "author": "Collin Brewer <collin@brewer-collective.com>",
-  "license": "MIT",
+  "license": "ISC",
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^2.5.3"
